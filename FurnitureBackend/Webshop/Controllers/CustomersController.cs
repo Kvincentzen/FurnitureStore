@@ -32,7 +32,7 @@ namespace Webshop.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Customer>> GetCustomer(int id)
         {
-            var customer = await _context.Customers.FindAsync(id);
+            var customer = await _context.Customers.Include(s => s.Login).FirstOrDefaultAsync(s => s.Id == id);
 
             if (customer == null)
             {
@@ -78,6 +78,16 @@ namespace Webshop.Controllers
         [HttpPost]
         public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
         {
+            //https://codingcanvas.com/loading-nested-entities-in-entityframework/
+            _context.Customers.Include
+            //Customer s = new Customer();
+            //s.Login = new Logins();
+            //s.Login.Id = 2;
+
+            Logins s = customer.Login;
+
+            //_context.Logins.Add(customer.Login);
+            customer.LoginId = s.Id;
             _context.Customers.Add(customer);
             await _context.SaveChangesAsync();
 
