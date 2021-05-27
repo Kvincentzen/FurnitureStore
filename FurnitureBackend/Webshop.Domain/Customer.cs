@@ -12,5 +12,9 @@ namespace Webshop.Domain
         public string Address { get; set; }
         public int LoginId { get; set; }
         public Logins Login { get; set; }
+        public Customer()
+        {
+            Login = new Logins();
+        }
     }
 }

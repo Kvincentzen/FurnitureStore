@@ -10,5 +10,7 @@ namespace Webshop.Domain
         public string Name { get; set; }
         public int ProductId { get; set; }
         public Product Products { get; set; }
+
+      
     }
 }

@@ -13,5 +13,6 @@ namespace Webshop.Domain
         public Edition Editions { get; set; }
         public Product Products { get; set; }
 
+        
     }
 }

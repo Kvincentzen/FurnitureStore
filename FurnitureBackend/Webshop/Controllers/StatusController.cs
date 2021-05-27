@@ -12,47 +12,47 @@ namespace Webshop.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomersController : ControllerBase
+    public class StatusController : ControllerBase
     {
         private readonly WebshopContext _context;
 
-        public CustomersController(WebshopContext context)
+        public StatusController(WebshopContext context)
         {
             _context = context;
         }
 
-        // GET: api/Customers
+        // GET: api/Status
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
+        public async Task<ActionResult<IEnumerable<Status>>> GetStatus()
         {
-            return await _context.Customers.ToListAsync();
+            return await _context.Status.ToListAsync();
         }
 
-        // GET: api/Customers/5
+        // GET: api/Status/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Customer>> GetCustomer(int id)
+        public async Task<ActionResult<Status>> GetStatus(int id)
         {
-            var customer = await _context.Customers.Include(s => s.Login).FirstOrDefaultAsync(s => s.Id == id);
+            var status = await _context.Status.FindAsync(id);
 
-            if (customer == null)
+            if (status == null)
             {
                 return NotFound();
             }
 
-            return customer;
+            return status;
         }
 
-        // PUT: api/Customers/5
+        // PUT: api/Status/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCustomer(int id, Customer customer)
+        public async Task<IActionResult> PutStatus(int id, Status status)
         {
-            if (id != customer.Id)
+            if (id != status.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(customer).State = EntityState.Modified;
+            _context.Entry(status).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace Webshop.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CustomerExists(id))
+                if (!StatusExists(id))
                 {
                     return NotFound();
                 }
@@ -73,36 +73,36 @@ namespace Webshop.Controllers
             return NoContent();
         }
 
-        // POST: api/Customers
+        // POST: api/Status
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
-        {           
-            _context.Customers.Add(customer);
+        public async Task<ActionResult<Status>> PostStatus(Status status)
+        {
+            _context.Status.Add(status);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCustomer", new { id = customer.Id }, customer);
+            return CreatedAtAction("GetStatus", new { id = status.Id }, status);
         }
 
-        // DELETE: api/Customers/5
+        // DELETE: api/Status/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCustomer(int id)
+        public async Task<IActionResult> DeleteStatus(int id)
         {
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer == null)
+            var status = await _context.Status.FindAsync(id);
+            if (status == null)
             {
                 return NotFound();
             }
 
-            _context.Customers.Remove(customer);
+            _context.Status.Remove(status);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool CustomerExists(int id)
+        private bool StatusExists(int id)
         {
-            return _context.Customers.Any(e => e.Id == id);
+            return _context.Status.Any(e => e.Id == id);
         }
     }
 }
