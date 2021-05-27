@@ -12,6 +12,5 @@ namespace Webshop.Domain
         public double PriceMod { get; set; }
         public Edition Editions { get; set; }
         public Product Products { get; set; }
-
     }
 }
