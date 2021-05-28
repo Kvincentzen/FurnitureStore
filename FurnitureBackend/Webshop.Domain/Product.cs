@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Webshop.Domain
 {
@@ -13,10 +14,7 @@ namespace Webshop.Domain
         public Color Color { get; set; }
         public Picture Picture { get; set; }
 
-        public Product()
-        {
-            Color = new Color();
-        }
+        public List<Picture> Pictures = new List<Picture>();
         
     }
 }

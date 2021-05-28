@@ -25,13 +25,8 @@ namespace Webshop.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
-            var picture = _context.Pictures.ToListAsync();
-            Console.WriteLine(picture.Id);  
-
             return await _context.Products
-                .Where(s => s.Picture.ProductId == s.Id).Include(s => s.Picture)
-                .Include(s => s.Color)
-                
+                .Include(s => s.Color)                
                 .ToListAsync();
         }
 
@@ -39,7 +34,16 @@ namespace Webshop.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            var product = await _context.Products.FindAsync(id);
+
+            var product = await _context.Products
+                .Where(s => s.Id == id)
+                .Include(s => s.Picture)
+                .Include(s => s.Color)
+                .FirstAsync();
+            var picture = await _context.Pictures
+                .Where(s => s.ProductId == product.Id)
+                .ToListAsync();
+            product.Pictures = picture;
 
             if (product == null)
             {
