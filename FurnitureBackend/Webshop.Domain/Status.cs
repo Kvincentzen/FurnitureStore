@@ -6,8 +6,7 @@ namespace Webshop.Domain
 {
     public class Status
     {
-        public int Id { get; set; }
+        public int Id_S { get; set; }
         public string StatusCurrent { get; set; }
-        //TODO ændre mig til string
     }
 }

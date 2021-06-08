@@ -6,7 +6,7 @@ namespace Webshop.Domain
 {
     public class Color
     {
-        public int Id { get; set; }
+        public int Id_CO { get; set; }
         public string ColorName { get; set; }
     }
 }
