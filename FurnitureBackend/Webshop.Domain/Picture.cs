@@ -6,7 +6,7 @@ namespace Webshop.Domain
 {
     public class Picture
     {
-        public int Id_PIC { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public int ProductEditionId { get; set; }
         

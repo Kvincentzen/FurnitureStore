@@ -10,8 +10,8 @@ using Webshop.Data;
 namespace Webshop.Data.Migrations
 {
     [DbContext(typeof(WebshopContext))]
-    [Migration("20210525110018_Init")]
-    partial class Init
+    [Migration("20210608090146_database_Init")]
+    partial class database_Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -71,6 +71,9 @@ namespace Webshop.Data.Migrations
 
                     b.Property<string>("EditionType")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PriceMod")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -136,14 +139,14 @@ namespace Webshop.Data.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int>("ProductEditionId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductEditionId");
 
                     b.ToTable("OrderLines");
                 });
@@ -158,12 +161,10 @@ namespace Webshop.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int>("ProductEditionId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("Pictures");
                 });
@@ -175,14 +176,11 @@ namespace Webshop.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ColorId")
+                    b.Property<int>("ColorId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("GenreId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -207,18 +205,26 @@ namespace Webshop.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("EditionId")
+                    b.Property<int?>("EditionsId")
                         .HasColumnType("int");
 
-                    b.Property<double>("PriceMod")
-                        .HasColumnType("float");
+                    b.Property<int>("PictureId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PictureId1")
+                        .HasColumnType("int");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
+                    b.Property<int>("VersionId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("EditionId");
+                    b.HasIndex("EditionsId");
+
+                    b.HasIndex("PictureId1");
 
                     b.HasIndex("ProductId");
 
@@ -278,31 +284,22 @@ namespace Webshop.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Webshop.Domain.Product", "Product")
+                    b.HasOne("Webshop.Domain.ProductEdition", "ProductEdition")
                         .WithMany()
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("ProductEditionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("Webshop.Domain.Picture", b =>
-                {
-                    b.HasOne("Webshop.Domain.Product", "Products")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Products");
+                    b.Navigation("ProductEdition");
                 });
 
             modelBuilder.Entity("Webshop.Domain.Product", b =>
                 {
                     b.HasOne("Webshop.Domain.Color", "Color")
                         .WithMany()
-                        .HasForeignKey("ColorId");
+                        .HasForeignKey("ColorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Color");
                 });
@@ -311,9 +308,11 @@ namespace Webshop.Data.Migrations
                 {
                     b.HasOne("Webshop.Domain.Edition", "Editions")
                         .WithMany()
-                        .HasForeignKey("EditionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EditionsId");
+
+                    b.HasOne("Webshop.Domain.Picture", "Picture")
+                        .WithMany()
+                        .HasForeignKey("PictureId1");
 
                     b.HasOne("Webshop.Domain.Product", "Products")
                         .WithMany()
@@ -322,6 +321,8 @@ namespace Webshop.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Editions");
+
+                    b.Navigation("Picture");
 
                     b.Navigation("Products");
                 });

@@ -5,7 +5,7 @@ namespace Webshop.Domain
 {
     public class Product
     {
-        public int Id_P { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public double Price { get; set; }
         public string Description { get; set; }

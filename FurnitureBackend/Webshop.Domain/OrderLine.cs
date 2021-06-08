@@ -6,7 +6,8 @@ namespace Webshop.Domain
 {
     public class OrderLine
     {
-        public int Id_OL { get; set; }
+        public int Id { get; set; }
+        //ORDERID blive sat ud fra ID for orders og er der kun for kunne blive peget på.
         public int OrderId { get; set; }
         public int ProductEditionId { get; set; }
         public int Amount { get; set; }
