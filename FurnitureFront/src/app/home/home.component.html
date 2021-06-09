@@ -1,14 +1,7 @@
 <p>home works!</p>
-<ul>
-    <div class="product">
-        <a class="itemBox" target="_blank" routerLink="/product/1"></a>
-    </div>
-    <div product>
-        <a class="itemBox" target="_blank" routerLink="/product/2"></a>
-    </div>
-    <div product></div>
-    <div product></div>
-    <div product></div>
-    <div product></div>
-    <div product></div>
-</ul>
+<div class="home products">
+    <a *ngFor="let product of products" routerLink="/products/{product.id}">
+        <span class="badge">{{product.id}}</span>
+        {{product.name}}
+    </a>
+</div>
