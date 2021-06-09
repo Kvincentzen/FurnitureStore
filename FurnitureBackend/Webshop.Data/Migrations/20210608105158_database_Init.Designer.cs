@@ -10,7 +10,7 @@ using Webshop.Data;
 namespace Webshop.Data.Migrations
 {
     [DbContext(typeof(WebshopContext))]
-    [Migration("20210608090146_database_Init")]
+    [Migration("20210608105158_database_Init")]
     partial class database_Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -211,9 +211,6 @@ namespace Webshop.Data.Migrations
                     b.Property<int>("PictureId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PictureId1")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
@@ -223,8 +220,6 @@ namespace Webshop.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("EditionsId");
-
-                    b.HasIndex("PictureId1");
 
                     b.HasIndex("ProductId");
 
@@ -310,10 +305,6 @@ namespace Webshop.Data.Migrations
                         .WithMany()
                         .HasForeignKey("EditionsId");
 
-                    b.HasOne("Webshop.Domain.Picture", "Picture")
-                        .WithMany()
-                        .HasForeignKey("PictureId1");
-
                     b.HasOne("Webshop.Domain.Product", "Products")
                         .WithMany()
                         .HasForeignKey("ProductId")
@@ -321,8 +312,6 @@ namespace Webshop.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Editions");
-
-                    b.Navigation("Picture");
 
                     b.Navigation("Products");
                 });

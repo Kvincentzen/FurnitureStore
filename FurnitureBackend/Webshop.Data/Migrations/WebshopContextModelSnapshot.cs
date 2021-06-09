@@ -209,9 +209,6 @@ namespace Webshop.Data.Migrations
                     b.Property<int>("PictureId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PictureId1")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
@@ -221,8 +218,6 @@ namespace Webshop.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("EditionsId");
-
-                    b.HasIndex("PictureId1");
 
                     b.HasIndex("ProductId");
 
@@ -308,10 +303,6 @@ namespace Webshop.Data.Migrations
                         .WithMany()
                         .HasForeignKey("EditionsId");
 
-                    b.HasOne("Webshop.Domain.Picture", "Picture")
-                        .WithMany()
-                        .HasForeignKey("PictureId1");
-
                     b.HasOne("Webshop.Domain.Product", "Products")
                         .WithMany()
                         .HasForeignKey("ProductId")
@@ -319,8 +310,6 @@ namespace Webshop.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Editions");
-
-                    b.Navigation("Picture");
 
                     b.Navigation("Products");
                 });

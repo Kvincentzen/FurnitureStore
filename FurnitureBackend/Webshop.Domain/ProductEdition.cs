@@ -12,7 +12,6 @@ namespace Webshop.Domain
         public int PictureId { get; set; }
         public Edition Editions { get; set; }
         public Product Products { get; set; }
-        public Picture Picture { get; set; }
         public List<Picture> Pictures = new List<Picture>();
     }
 }

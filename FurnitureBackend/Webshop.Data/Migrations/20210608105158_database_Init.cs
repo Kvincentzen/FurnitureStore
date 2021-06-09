@@ -129,8 +129,7 @@ namespace Webshop.Data.Migrations
                     VersionId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     PictureId = table.Column<int>(type: "int", nullable: false),
-                    EditionsId = table.Column<int>(type: "int", nullable: false),
-
+                    EditionsId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -139,12 +138,6 @@ namespace Webshop.Data.Migrations
                         name: "FK_ProductEditions_Editions_EditionsId",
                         column: x => x.EditionsId,
                         principalTable: "Editions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ProductEditions_Pictures_PictureId",
-                        column: x => x.PictureId,
-                        principalTable: "Pictures",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -241,11 +234,6 @@ namespace Webshop.Data.Migrations
                 column: "EditionsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductEditions_PictureId",
-                table: "ProductEditions",
-                column: "PictureId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ProductEditions_ProductId",
                 table: "ProductEditions",
                 column: "ProductId");
@@ -262,6 +250,9 @@ namespace Webshop.Data.Migrations
                 name: "OrderLines");
 
             migrationBuilder.DropTable(
+                name: "Pictures");
+
+            migrationBuilder.DropTable(
                 name: "Orders");
 
             migrationBuilder.DropTable(
@@ -275,9 +266,6 @@ namespace Webshop.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Editions");
-
-            migrationBuilder.DropTable(
-                name: "Pictures");
 
             migrationBuilder.DropTable(
                 name: "Products");
