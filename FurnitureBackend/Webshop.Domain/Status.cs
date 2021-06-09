@@ -8,6 +8,5 @@ namespace Webshop.Domain
     {
         public int Id { get; set; }
         public string StatusCurrent { get; set; }
-        //TODO ændre mig til string
     }
 }

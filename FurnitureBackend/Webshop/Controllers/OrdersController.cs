@@ -25,7 +25,11 @@ namespace Webshop.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
         {
-            return await _context.Orders.ToListAsync();
+            return await _context.Orders
+                .Include(s => s.OrderLines)
+                .Include(s => s.Customer)
+                .ThenInclude(s => s.Login)
+                .ToListAsync();
         }
 
         // GET: api/Orders/5
@@ -33,6 +37,22 @@ namespace Webshop.Controllers
         public async Task<ActionResult<Order>> GetOrder(int id)
         {
             var order = await _context.Orders.FindAsync(id);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return order;
+        }
+
+        [HttpGet("GetAllOrders/{id}")]
+        [Route("GetAllOrders/{id}")]
+        public async Task<ActionResult<IEnumerable<Order>>> GetAllOrdersByCustomerId(int id)
+        {
+            var order = await _context.Orders
+                .Where(l => l.CustomerId == id)
+                .ToListAsync();
 
             if (order == null)
             {
@@ -78,6 +98,7 @@ namespace Webshop.Controllers
         [HttpPost]
         public async Task<ActionResult<Order>> PostOrder(Order order)
         {
+            order.Date = DateTime.Now;
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
 

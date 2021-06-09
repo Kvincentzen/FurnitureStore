@@ -25,14 +25,20 @@ namespace Webshop.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
-            return await _context.Products.ToListAsync();
+            return await _context.Products
+                .Include(s => s.Color)                
+                .ToListAsync();
         }
 
         // GET: api/Products/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            var product = await _context.Products.FindAsync(id);
+
+            var product = await _context.Products
+                .Where(s => s.Id == id)
+                .FirstAsync();
+        
 
             if (product == null)
             {
@@ -40,6 +46,20 @@ namespace Webshop.Controllers
             }
 
             return product;
+        }
+
+        [HttpGet("GetName")]
+        [Route("GetName")]
+        public async Task<ActionResult<IEnumerable<Product>>> GetProductName([FromQuery(Name = "name")] string name)
+        {
+            var products = await _context.Products.Where(s => s.Name.Contains(name)).ToListAsync();
+
+            if (products == null)
+            {
+                return NotFound();
+            }
+
+            return products;
         }
 
         // PUT: api/Products/5
