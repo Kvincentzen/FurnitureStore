@@ -12,9 +12,7 @@ namespace Webshop.Domain
         public int ColorId { get; set; }
         public int Stock { get; set; }
         public Color Color { get; set; }
-        public Picture Picture { get; set; }
-
-        public List<Picture> Pictures = new List<Picture>();
+        
         
     }
 }

@@ -52,10 +52,6 @@ namespace Webshop.Controllers
         {
             var order = await _context.Orders
                 .Where(l => l.CustomerId == id)
-                .Include(s => s.OrderLines)
-                .ThenInclude(s => s.Product)
-                .Include(s => s.Customer)
-                .ThenInclude(s => s.Login)
                 .ToListAsync();
 
             if (order == null)

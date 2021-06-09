@@ -37,13 +37,8 @@ namespace Webshop.Controllers
 
             var product = await _context.Products
                 .Where(s => s.Id == id)
-                .Include(s => s.Picture)
-                .Include(s => s.Color)
                 .FirstAsync();
-            var picture = await _context.Pictures
-                .Where(s => s.ProductId == product.Id)
-                .ToListAsync();
-            product.Pictures = picture;
+        
 
             if (product == null)
             {

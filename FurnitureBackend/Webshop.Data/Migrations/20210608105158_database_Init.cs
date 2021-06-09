@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Webshop.Data.Migrations
 {
-    public partial class Init : Migration
+    public partial class database_Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -26,7 +26,8 @@ namespace Webshop.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    EditionType = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    EditionType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PriceMod = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -45,6 +46,20 @@ namespace Webshop.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Logins", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Pictures",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProductEditionId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pictures", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -69,9 +84,8 @@ namespace Webshop.Data.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<double>(type: "float", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    GenreId = table.Column<int>(type: "int", nullable: false),
-                    Stock = table.Column<int>(type: "int", nullable: false),
-                    ColorId = table.Column<int>(type: "int", nullable: true)
+                    ColorId = table.Column<int>(type: "int", nullable: false),
+                    Stock = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -81,7 +95,7 @@ namespace Webshop.Data.Migrations
                         column: x => x.ColorId,
                         principalTable: "Colors",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -107,44 +121,25 @@ namespace Webshop.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Pictures",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ProductId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Pictures", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Pictures_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ProductEditions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    EditionId = table.Column<int>(type: "int", nullable: false),
+                    VersionId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    PriceMod = table.Column<double>(type: "float", nullable: false)
+                    PictureId = table.Column<int>(type: "int", nullable: false),
+                    EditionsId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProductEditions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductEditions_Editions_EditionId",
-                        column: x => x.EditionId,
+                        name: "FK_ProductEditions_Editions_EditionsId",
+                        column: x => x.EditionsId,
                         principalTable: "Editions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ProductEditions_Products_ProductId",
                         column: x => x.ProductId,
@@ -187,7 +182,7 @@ namespace Webshop.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OrderId = table.Column<int>(type: "int", nullable: false),
-                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    ProductEditionId = table.Column<int>(type: "int", nullable: false),
                     Amount = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false)
                 },
@@ -201,9 +196,9 @@ namespace Webshop.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_OrderLines_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
+                        name: "FK_OrderLines_ProductEditions_ProductEditionId",
+                        column: x => x.ProductEditionId,
+                        principalTable: "ProductEditions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -219,9 +214,9 @@ namespace Webshop.Data.Migrations
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderLines_ProductId",
+                name: "IX_OrderLines_ProductEditionId",
                 table: "OrderLines",
-                column: "ProductId");
+                column: "ProductEditionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_CustomerId",
@@ -234,14 +229,9 @@ namespace Webshop.Data.Migrations
                 column: "StatusId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pictures_ProductId",
-                table: "Pictures",
-                column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductEditions_EditionId",
+                name: "IX_ProductEditions_EditionsId",
                 table: "ProductEditions",
-                column: "EditionId");
+                column: "EditionsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductEditions_ProductId",
@@ -263,16 +253,10 @@ namespace Webshop.Data.Migrations
                 name: "Pictures");
 
             migrationBuilder.DropTable(
-                name: "ProductEditions");
-
-            migrationBuilder.DropTable(
                 name: "Orders");
 
             migrationBuilder.DropTable(
-                name: "Editions");
-
-            migrationBuilder.DropTable(
-                name: "Products");
+                name: "ProductEditions");
 
             migrationBuilder.DropTable(
                 name: "Customers");
@@ -281,10 +265,16 @@ namespace Webshop.Data.Migrations
                 name: "Status");
 
             migrationBuilder.DropTable(
-                name: "Colors");
+                name: "Editions");
+
+            migrationBuilder.DropTable(
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Logins");
+
+            migrationBuilder.DropTable(
+                name: "Colors");
         }
     }
 }
