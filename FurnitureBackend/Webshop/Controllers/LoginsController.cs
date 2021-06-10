@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Webshop.Data;
 using Webshop.Domain;
+using BC = BCrypt.Net.BCrypt;
 
 namespace Webshop.Controllers
 {
@@ -23,14 +24,14 @@ namespace Webshop.Controllers
 
         // GET: api/Logins
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Logins>>> GetLogins()
+        public async Task<ActionResult<IEnumerable<Login>>> GetLogins()
         {
             return await _context.Logins.ToListAsync();
         }
 
         // GET: api/Logins/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Logins>> GetLogins(int id)
+        public async Task<ActionResult<Login>> GetLogins(int id)
         {
             var logins = await _context.Logins.FindAsync(id);
 
@@ -45,7 +46,7 @@ namespace Webshop.Controllers
         // PUT: api/Logins/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutLogins(int id, Logins logins)
+        public async Task<IActionResult> PutLogins(int id, Login logins)
         {
             if (id != logins.Id)
             {
@@ -76,7 +77,7 @@ namespace Webshop.Controllers
         // POST: api/Logins
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Logins>> PostLogins(Logins logins)
+        public async Task<ActionResult<Login>> PostLogins(Login logins)
         {
             _context.Logins.Add(logins);
             await _context.SaveChangesAsync();

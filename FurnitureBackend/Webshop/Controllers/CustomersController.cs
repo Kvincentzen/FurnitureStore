@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Webshop.Data;
 using Webshop.Domain;
+using BC = BCrypt.Net.BCrypt;
 
 namespace Webshop.Controllers
 {
@@ -77,10 +78,16 @@ namespace Webshop.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
-        {           
+        {
+            //TODO HUSK AT HASHE PASSWORD
+            string testHash = BC.HashPassword(customer.Login.Password);
+            customer.Login.Password = testHash;
             _context.Customers.Add(customer);
             await _context.SaveChangesAsync();
 
+            //Er der for at password ikke skal sendes tilbage til kunden og skal måske have en return med NOCONTENT funktionen istedetfor
+            customer.Login.Password = null;
+            
             return CreatedAtAction("GetCustomer", new { id = customer.Id }, customer);
         }
 
