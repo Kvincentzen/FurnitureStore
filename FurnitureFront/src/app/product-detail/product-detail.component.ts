@@ -9,17 +9,20 @@ import { Product } from '../models/product';
   styleUrls: ['./product-detail.component.css']
 })
 export class ProductDetailComponent implements OnInit {
+
   product: Product;
 
-  constructor(private route: ActivatedRoute, private productService: ProductService) { }
+  constructor(
+    private route: ActivatedRoute, 
+    private productService: ProductService) { }
 
   ngOnInit(): void {
     this.getProduct();
   }
   getProduct(): void {
-    const id = parseInt(this.route.snapshot.paramMap.get('id')!, 10);
+    const id = parseInt(this.route.snapshot.paramMap.get('id'));
     this.productService.getProduct(id)
-    .subscribe(product => this.product = product)
+      .subscribe(product => this.product = product);
   }
 
 }

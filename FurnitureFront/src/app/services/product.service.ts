@@ -8,7 +8,7 @@ import { Product } from '../models/product';
   providedIn: 'root'
 })
 export class ProductService {
-  private productUrl = 'api/Products/';
+  private productUrl = 'api/products/';
 
   constructor(private http: HttpClient) { }
 
@@ -18,8 +18,8 @@ export class ProductService {
   getProducts(): Observable<Product[]>{
     return this.http.get<Product[]>(this.productUrl)
   }
-  getProduct(id:number): Observable<Product> {
-    const url = `${this.productUrl}/{id}`;
+  getProduct(id: number): Observable<Product> {
+    const url = `${this.productUrl}/${id}`;
     return this.http.get<Product>(url)
   }
 }
