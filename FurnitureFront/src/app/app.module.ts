@@ -9,6 +9,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { AboutUsComponent } from './about-us/about-us.component';
 import { HomeComponent } from './home/home.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { ProductDetailComponent } from './product-detail/product-detail.component';
 
 @NgModule({
   declarations: [
@@ -16,18 +17,13 @@ import { NavbarComponent } from './navbar/navbar.component';
     PageNotFoundComponent,
     AboutUsComponent,
     HomeComponent,
-    NavbarComponent
+    NavbarComponent,
+    ProductDetailComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule,
-    RouterModule.forRoot([
-      {path: 'home', component: HomeComponent},
-      {path: 'about-us', component: AboutUsComponent},
-      {path: '', redirectTo: '/home', pathMatch: 'full'},
-      {path: '**', component: PageNotFoundComponent}
-    ])
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
