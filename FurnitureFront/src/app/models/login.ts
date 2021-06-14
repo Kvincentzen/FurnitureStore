@@ -1,6 +1,13 @@
 export interface Login {
-    id: number;
-    email: string;
-    password: string;
-    role: string;
+    Id: number;
+    Email: string;
+    Password: string;
+    Role: string;
+}
+
+export class ClassLogin{
+    Id: number;
+    Email: string;
+    Password: string;
+    Role: string;
 }

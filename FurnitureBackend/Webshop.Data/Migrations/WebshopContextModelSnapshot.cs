@@ -88,6 +88,10 @@ namespace Webshop.Data.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+
                     b.Property<string>("Role")
                         .HasColumnType("nvarchar(max)");
 

@@ -32,7 +32,7 @@ namespace Webshop.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //Vi skal ikke sende Password til brugeren, denne sætning gør at den blive ignoreret.
-            modelBuilder.Entity<Login>().Ignore(b => b.Password);
+            //modelBuilder.Entity<Login>().Ignore(b => b.Password);
         }
     }
 }

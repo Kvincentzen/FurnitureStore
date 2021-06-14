@@ -79,15 +79,26 @@ namespace Webshop.Controllers
         [HttpPost]
         public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
         {
-            //TODO HUSK AT HASHE PASSWORD
-            string testHash = BC.HashPassword(customer.Login.Password);
-            customer.Login.Password = testHash;
-            _context.Customers.Add(customer);
-            await _context.SaveChangesAsync();
+            //CHECK FOR Kontoen allerede findes
+            Login login = await _context.Logins.FirstOrDefaultAsync(s => customer.Login.Email == s.Email);
+            if (login == null)
+            {
+                //TODO SKAL LAVES PÆNERE 
+                string testHash = BC.HashPassword(customer.Login.Password);
+                customer.Login.Password = testHash;
+                _context.Customers.Add(customer);
 
-            //Er der for at password ikke skal sendes tilbage til kunden og skal måske have en return med NOCONTENT funktionen istedetfor
-            customer.Login.Password = null;
-            
+                await _context.SaveChangesAsync();
+
+                //Er der for at password ikke skal sendes tilbage til kunden og skal måske have en return med NOCONTENT funktionen istedetfor
+                customer.Login.Password = null;
+
+               
+            }
+            else
+            {
+                return NoContent();
+            }
             return CreatedAtAction("GetCustomer", new { id = customer.Id }, customer);
         }
 
@@ -105,6 +116,35 @@ namespace Webshop.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+
+        [HttpPost]
+        [Route("VerifyPassword")]
+        public async Task<ActionResult<Login>> VerifyPassword(Login login)
+        {
+            var customer = await _context.Customers.Include(s => s.Login).FirstOrDefaultAsync(s => s.Login.Email == login.Email);
+            //TODO checks på at emailen findes og at koden tilhøre kunden
+            bool i = BC.Verify(login.Password, customer.Login.Password);
+            Console.WriteLine(i);
+            //[FromQuery(Name = "id")] int id, [FromQuery(Name = "email")] string email, [FromQuery(Name = "password")] string password
+
+            return NoContent();
+        }
+
+
+        [HttpGet("GetName")]
+        [Route("GetName")]
+        public async Task<ActionResult<IEnumerable<Product>>> GetProductName([FromQuery(Name = "name")] string name)
+        {
+            var products = await _context.Products.Where(s => s.Name.Contains(name)).ToListAsync();
+
+            if (products == null)
+            {
+                return NotFound();
+            }
+
+            return products;
         }
 
         private bool CustomerExists(int id)

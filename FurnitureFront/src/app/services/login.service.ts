@@ -8,10 +8,18 @@ import { Login } from '../models/login';
   providedIn: 'root'
 })
 export class LoginService {
+  private loginUrl = 'api/Customers/';
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
-  ToLogin(login: Login){
+  httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  }
 
+
+  ToLogin(login: Login): Observable<Login>{
+    const url = `${this.loginUrl}VerifyPassword/`;
+    return this.http.post<Login>(url, login, this.httpOptions)
+      .pipe(tap(_ => console.log('Verifying password')))
   }
 }

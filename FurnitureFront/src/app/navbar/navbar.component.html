@@ -4,6 +4,30 @@
           | <a routerLink="/home" routerLinkActive="activebutton">Home</a> |
           <a  routerLink="/contact" routerLinkActive="activebutton">Contact</a> |
           <a  routerLink="/about-us" >About Us</a> |
+          <div>
+            <form (ngSubmit)="VerifyPassword(login)" #ProductFormIns="ngForm">
+              <label for="AddLogin">Create User </label>
+              <div>
+                Your Email: <input type="text" name="loginEmail" id="loginEmail" required
+                    [(ngModel)]="login.Email" #loginEmail="ngModel">
+                    <div [hidden]="loginEmail.valid || loginEmail.pristine">
+                        Name is required
+                    </div>
+              
+                </div>
+                Your password name: <input type="text" name="loginPassword" id="loginPassword" required
+                    [(ngModel)]="login.Password" #loginPassword="ngModel">
+                    <div [hidden]="loginPassword.valid || loginPassword.pristine">
+                        Password is required
+                    </div>
+        
+                    <br>
+        
+                <button type="submit" [disabled]="!ProductFormIns.valid">Submit</button>
+        
+            </form>
+        
+          </div>
         </ul>
     </div>
   </nav>
