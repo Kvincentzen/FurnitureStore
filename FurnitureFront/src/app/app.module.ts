@@ -10,6 +10,7 @@ import { AboutUsComponent } from './about-us/about-us.component';
 import { HomeComponent } from './home/home.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
+import { ProductSearchComponent } from './product-search/product-search.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { ProductDetailComponent } from './product-detail/product-detail.componen
     AboutUsComponent,
     HomeComponent,
     NavbarComponent,
-    ProductDetailComponent
+    ProductDetailComponent,
+    ProductSearchComponent
   ],
   imports: [
     BrowserModule,

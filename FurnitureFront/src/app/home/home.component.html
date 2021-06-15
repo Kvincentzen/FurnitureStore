@@ -1,7 +1,7 @@
-<p>home works!</p>
 <div class="home products">
     <a *ngFor="let product of products" routerLink="/product/{{product.id}}">
         <span class="badge">{{product.id}}</span>
         {{product.name}}
     </a>
+    <app-product-search></app-product-search>
 </div>

@@ -51,7 +51,7 @@ namespace Webshop.Controllers
         [HttpGet("GetName")]
         [Route("GetName")]
         public async Task<ActionResult<IEnumerable<Product>>> GetProductName([FromQuery(Name = "name")] string name)
-        {
+       {
             var products = await _context.Products.Where(s => s.Name.Contains(name)).ToListAsync();
 
             if (products == null)
