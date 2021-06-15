@@ -2,25 +2,89 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Webshop.Data;
 using Webshop.Domain;
+using Webshop.JWT;
 using BC = BCrypt.Net.BCrypt;
+
+
 
 namespace Webshop.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CustomersController : ControllerBase
     {
+
+        //Authorize 
+        private readonly IJWTAuthenticatorManager jwtAuthenticatorManager;
         private readonly WebshopContext _context;
 
-        public CustomersController(WebshopContext context)
+        public CustomersController(WebshopContext context, IJWTAuthenticatorManager jwtAuthenticatorManager)
         {
             _context = context;
+            this.jwtAuthenticatorManager = jwtAuthenticatorManager;
+
         }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("VerifyPassword")]
+        public async Task<ActionResult<Login>> VerifyPassword(Login login)
+        {
+            var customer = await _context.Customers.Include(s => s.Login).FirstOrDefaultAsync(s => s.Login.Email == login.Email);
+            if (customer == null)
+            {
+                //TODO ERROR HANDLING
+                return Unauthorized();
+            }            
+            else
+            {
+                bool i = BC.Verify(login.Password, customer.Login.Password);
+                Console.WriteLine(i);
+                if (!i)
+                {
+                    return Unauthorized();
+                }
+                else
+                {
+                    //TODO Create user token with JWT
+                    var token = jwtAuthenticatorManager.Authenticate(customer);
+                    if (token == null)
+                    {
+                        return Unauthorized();
+                    }
+                    Console.WriteLine(token);
+                    return Ok(token);
+                    
+                }
+            }
+        }
+        
+
+        [HttpGet("GetRole/{id}")]
+        //[Route("GetRole")]
+        public async Task<ActionResult<Customer>> GetRole(int id)
+        {
+            //TODO Dunno om det laves sådan men den burde kun returne et Rollen personen har
+            var customer = await _context.Customers
+                                    .Include(s => s.Login)
+                                    .FirstOrDefaultAsync(s => s.Id == id);
+            
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            return customer;
+        }
+        
+        #region Scaffolded code
 
         // GET: api/Customers
         [HttpGet]
@@ -119,37 +183,11 @@ namespace Webshop.Controllers
         }
 
 
-        [HttpPost]
-        [Route("VerifyPassword")]
-        public async Task<ActionResult<Login>> VerifyPassword(Login login)
-        {
-            var customer = await _context.Customers.Include(s => s.Login).FirstOrDefaultAsync(s => s.Login.Email == login.Email);
-            //TODO checks på at emailen findes og at koden tilhøre kunden
-            bool i = BC.Verify(login.Password, customer.Login.Password);
-            Console.WriteLine(i);
-            //[FromQuery(Name = "id")] int id, [FromQuery(Name = "email")] string email, [FromQuery(Name = "password")] string password
-
-            return NoContent();
-        }
-
-
-        [HttpGet("GetName")]
-        [Route("GetName")]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProductName([FromQuery(Name = "name")] string name)
-        {
-            var products = await _context.Products.Where(s => s.Name.Contains(name)).ToListAsync();
-
-            if (products == null)
-            {
-                return NotFound();
-            }
-
-            return products;
-        }
 
         private bool CustomerExists(int id)
         {
             return _context.Customers.Any(e => e.Id == id);
         }
+        #endregion
     }
 }

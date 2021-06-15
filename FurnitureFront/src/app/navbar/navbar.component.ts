@@ -30,6 +30,6 @@ export class NavbarComponent implements OnInit {
     this.loginService.ToLogin(login)
       .subscribe()
       
-
+    
   }
 }

@@ -5,7 +5,7 @@
       <a routerLink="/contact" routerLinkActive="activebutton">Contact</a> |
       <a routerLink="/about-us">About Us</a> |
       <form (ngSubmit)="VerifyPassword(login)" #ProductFormIns="ngForm">
-        <a for="VerifyPassword">Login </a>
+        <label for="VerifyPassword">Login </label>
 
         Your Email: <input type="text" name="loginEmail" id="loginEmail" required [(ngModel)]="login.Email"
           #loginEmail="ngModel">
