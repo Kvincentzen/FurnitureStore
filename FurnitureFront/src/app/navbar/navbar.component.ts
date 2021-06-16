@@ -14,6 +14,7 @@ import { debounce, debounceTime } from 'rxjs/operators';
 export class NavbarComponent implements OnInit {
   login = new ClassLogin();
   loginEdit: boolean;
+  bearerToken: string;
   //loginModel = new ClassLogin();
 
   constructor(
@@ -26,9 +27,11 @@ export class NavbarComponent implements OnInit {
   VerifyPassword(login: ClassLogin): void {
     login.Id = 0;
     login.Role = null;
-    console.log(login);
-    this.loginService.ToLogin(login)
-      .subscribe()
+   
+    this.loginService.ToLogin(login.Email, login.Password)
+      .subscribe(bearer => this.bearerToken = bearer)
+    //MAKE IT AN OBJECT
+    console.log(this.bearerToken);
       
     
   }

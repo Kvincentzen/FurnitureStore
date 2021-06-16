@@ -15,6 +15,12 @@ using BC = BCrypt.Net.BCrypt;
 
 namespace Webshop.Controllers
 {
+    public class Token {
+        public string token { get; set; }
+
+
+    }
+
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
@@ -31,13 +37,50 @@ namespace Webshop.Controllers
             this.jwtAuthenticatorManager = jwtAuthenticatorManager;
 
         }
+        
+        
+        /*FOR
+      [AllowAnonymous]
+      [HttpPost]
+      [Route("VerifyPassword")]
+      public async Task<ActionResult<Login>> VerifyPassword(Login login)
+      {
+          var customer = await _context.Customers.Include(s => s.Login).FirstOrDefaultAsync(s => s.Login.Email == login.Email);
+          if (customer == null)
+          {
+              //TODO ERROR HANDLING
+              return Unauthorized();
+          }            
+          else
+          {
+              bool i = BC.Verify(login.Password, customer.Login.Password);
+              Console.WriteLine(i);
+              if (!i)
+              {
+                  return Unauthorized();
+              }
+              else
+              {
+                  //TODO Create user token with JWT
+                  var token = jwtAuthenticatorManager.Authenticate(customer);
+                  if (token == null)
+                  {
+                      return Unauthorized();
+                  }
+                  Console.WriteLine(token);
+                  return Ok(token);
+
+              }
+          }
+      }
+        */
 
         [AllowAnonymous]
-        [HttpPost]
+        [HttpGet]
         [Route("VerifyPassword")]
-        public async Task<ActionResult<Login>> VerifyPassword(Login login)
+        public async Task<ActionResult<string>> VerifyPassword([FromQuery(Name = "email")] string email, [FromQuery(Name = "password")] string password)
         {
-            var customer = await _context.Customers.Include(s => s.Login).FirstOrDefaultAsync(s => s.Login.Email == login.Email);
+            var customer = await _context.Customers.Include(s => s.Login).FirstOrDefaultAsync(s => s.Login.Email == email);
             if (customer == null)
             {
                 //TODO ERROR HANDLING
@@ -45,7 +88,7 @@ namespace Webshop.Controllers
             }            
             else
             {
-                bool i = BC.Verify(login.Password, customer.Login.Password);
+                bool i = BC.Verify(password, customer.Login.Password);
                 Console.WriteLine(i);
                 if (!i)
                 {
@@ -60,12 +103,16 @@ namespace Webshop.Controllers
                         return Unauthorized();
                     }
                     Console.WriteLine(token);
-                    return Ok(token);
+                    Token ttoken = new Token();
+                    ttoken.token = token;
+                    return ttoken;
                     
                 }
             }
         }
         
+       
+
 
         [HttpGet("GetRole/{id}")]
         //[Route("GetRole")]
@@ -83,7 +130,36 @@ namespace Webshop.Controllers
 
             return customer;
         }
-        
+
+        // POST: api/Customers
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
+        {
+            //CHECK FOR Kontoen allerede findes
+            Login login = await _context.Logins.FirstOrDefaultAsync(s => customer.Login.Email == s.Email);
+            if (login == null)
+            {
+                //TODO SKAL LAVES PÆNERE 
+                string testHash = BC.HashPassword(customer.Login.Password);
+                customer.Login.Password = testHash;
+                _context.Customers.Add(customer);
+
+                await _context.SaveChangesAsync();
+
+                //Er der for at password ikke skal sendes tilbage til kunden og skal måske have en return med NOCONTENT funktionen istedetfor
+                customer.Login.Password = null;
+
+
+            }
+            else
+            {
+                return Ok("Didnt get created");
+            }
+            return CreatedAtAction("GetCustomer", new { id = customer.Id }, customer);
+        }
+
+
         #region Scaffolded code
 
         // GET: api/Customers
@@ -138,34 +214,7 @@ namespace Webshop.Controllers
             return NoContent();
         }
 
-        // POST: api/Customers
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
-        {
-            //CHECK FOR Kontoen allerede findes
-            Login login = await _context.Logins.FirstOrDefaultAsync(s => customer.Login.Email == s.Email);
-            if (login == null)
-            {
-                //TODO SKAL LAVES PÆNERE 
-                string testHash = BC.HashPassword(customer.Login.Password);
-                customer.Login.Password = testHash;
-                _context.Customers.Add(customer);
-
-                await _context.SaveChangesAsync();
-
-                //Er der for at password ikke skal sendes tilbage til kunden og skal måske have en return med NOCONTENT funktionen istedetfor
-                customer.Login.Password = null;
-
-               
-            }
-            else
-            {
-                return NoContent();
-            }
-            return CreatedAtAction("GetCustomer", new { id = customer.Id }, customer);
-        }
-
+       
         // DELETE: api/Customers/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer(int id)
