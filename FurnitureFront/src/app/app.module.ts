@@ -11,6 +11,7 @@ import { HomeComponent } from './home/home.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { ProductSearchComponent } from './product-search/product-search.component';
+import { ProductOverviewComponent } from './product-overview/product-overview.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { ProductSearchComponent } from './product-search/product-search.componen
     HomeComponent,
     NavbarComponent,
     ProductDetailComponent,
-    ProductSearchComponent
+    ProductSearchComponent,
+    ProductOverviewComponent
   ],
   imports: [
     BrowserModule,

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../services/product.service';
 import { Product } from '../models/product';
 
@@ -13,8 +13,9 @@ export class ProductDetailComponent implements OnInit {
   product: Product;
 
   constructor(
-    private route: ActivatedRoute, 
-    private productService: ProductService) { }
+    private route: ActivatedRoute,
+    private router: Router,
+    private productService: ProductService) { this.router.routeReuseStrategy.shouldReuseRoute = () => false; }
 
   ngOnInit(): void {
     this.getProduct();
