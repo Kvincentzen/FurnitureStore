@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
-import { Login } from '../models/login';
+import { catchError, map, tap, finalize,  } from 'rxjs/operators';
+import { Login, ClassLogin } from '../models/login';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
   private loginUrl = 'api/Customers/';
-  public bearerToken: string
 
   constructor(private http: HttpClient) { }
 
@@ -27,12 +27,17 @@ export class LoginService {
   }
 */
   
-
-  ToLogin(email: string, password: string){
+  //Man kan bruge console.log til at skrive værdien i en observable 
+  ToLogin(email: string, password: string): Observable<Login>{
     const url = `${this.loginUrl}VerifyPassword/?email=${email}&password=${password}`;
-    console.log(this.http.get<Login>(url));
     
-    return this.http.get<string>(url)
+    return this.http.get<Login>(url)
+      .pipe(
+      tap( res => console.log('HTTP response:', res)),
+      finalize(() => console.log())
+      )
       
   } 
+
+  
 }

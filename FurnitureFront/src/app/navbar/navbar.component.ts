@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { ClassLogin } from '../models/login';
+import { ClassLogin, Login } from '../models/login';
 import { LoginService } from '../services/login.service'
 import { FormsModule } from '@angular/forms';
 import { Location } from '@angular/common';
-import { Observable } from 'rxjs';
+import { Observable, observable } from 'rxjs';
 import { debounce, debounceTime } from 'rxjs/operators';
+import { ProductService } from '../services/product.service';
+import { Product } from '../models/product';
+
 
 @Component({
   selector: 'app-navbar',
@@ -12,27 +15,51 @@ import { debounce, debounceTime } from 'rxjs/operators';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  login = new ClassLogin();
+  classLogin = new ClassLogin;
+  login: Login;
   loginEdit: boolean;
   bearerToken: string;
-  //loginModel = new ClassLogin();
+  product: Product;
+  observable$;
 
   constructor(
     private loginService: LoginService,
+    private productService: ProductService
   ) { }
 
   ngOnInit(): void {
+    this.observable$ = Observable.create((dwa) => {
+      dwa.next(1);
+    })
   }
 
-  VerifyPassword(login: ClassLogin): void {
-    login.Id = 0;
-    login.Role = null;
-   
-    this.loginService.ToLogin(login.Email, login.Password)
-      .subscribe(bearer => this.bearerToken = bearer)
-    //MAKE IT AN OBJECT
-    console.log(this.bearerToken);
-      
+  private delay(ms: number)
+  {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  // DET KAN FUNGERE MEN BLIVER IKKE SIKKERT HVIS MAN BRUGER ET DELAY 
+  async VerifyPassword() {
+    
+    this.loginService.ToLogin('jegerenemail@trues12.dk', 'jegeretsikkertpassword1')
+      .subscribe(Login => {
+        this.login = Login,
+        this.GetData})
+    
+      await this.delay(500);
+      this.GetData();
+  }
+
+  GetData(){
+    console.log(this.login);
+  }
+
+  GetProduct() {
+    this.productService.getProduct(2)
+      .subscribe(product => this.product = product)
+
+    console.log(this.product);
     
   }
 }
+

@@ -4,17 +4,17 @@
       | <a routerLink="/home" routerLinkActive="activebutton">Home</a> |
       <a routerLink="/contact" routerLinkActive="activebutton">Contact</a> |
       <a routerLink="/about-us">About Us</a> |
-      <form (ngSubmit)="VerifyPassword(login)" #ProductFormIns="ngForm">
+      <form (ngSubmit)="VerifyPassword()" #ProductFormIns="ngForm">
         <label for="VerifyPassword">Login </label>
 
-        Your Email: <input type="text" name="loginEmail" id="loginEmail" required [(ngModel)]="login.Email"
-          #loginEmail="ngModel">
+        Your Email: <input type="text" name="loginEmail" id="loginEmail" required
+         [(ngModel)]="classLogin.email" #loginEmail="ngModel">
         <div [hidden]="loginEmail.valid || loginEmail.pristine">
           Name is required
         </div>
 
         Your password name: <input type="text" name="loginPassword" id="loginPassword" required
-          [(ngModel)]="login.Password" #loginPassword="ngModel">
+         [(ngModel)]="classLogin.password" #loginPassword="ngModel">
         <div [hidden]="loginPassword.valid || loginPassword.pristine">
           Password is required
         </div>
@@ -22,7 +22,7 @@
         <button class="button" type="submit" [disabled]="!ProductFormIns.valid">Submit</button>
 
       </form> 
-
+      <button (click)="VerifyPassword()"></button>
 
     </ul>
   </div>

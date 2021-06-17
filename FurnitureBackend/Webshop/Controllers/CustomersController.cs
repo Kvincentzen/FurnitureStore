@@ -78,7 +78,7 @@ namespace Webshop.Controllers
         [AllowAnonymous]
         [HttpGet]
         [Route("VerifyPassword")]
-        public async Task<ActionResult<string>> VerifyPassword([FromQuery(Name = "email")] string email, [FromQuery(Name = "password")] string password)
+        public async Task<ActionResult<Login>> VerifyPassword([FromQuery(Name = "email")] string email, [FromQuery(Name = "password")] string password)
         {
             var customer = await _context.Customers.Include(s => s.Login).FirstOrDefaultAsync(s => s.Login.Email == email);
             if (customer == null)
@@ -103,9 +103,8 @@ namespace Webshop.Controllers
                         return Unauthorized();
                     }
                     Console.WriteLine(token);
-                    Token ttoken = new Token();
-                    ttoken.token = token;
-                    return ttoken;
+                    customer.Login.Role = token;
+                    return customer.Login;
                     
                 }
             }
@@ -133,6 +132,7 @@ namespace Webshop.Controllers
 
         // POST: api/Customers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
         {
