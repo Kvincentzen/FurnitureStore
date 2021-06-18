@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Webshop.Data;
 using Webshop.Domain;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Webshop.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase

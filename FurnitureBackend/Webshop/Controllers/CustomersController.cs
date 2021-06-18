@@ -15,11 +15,6 @@ using BC = BCrypt.Net.BCrypt;
 
 namespace Webshop.Controllers
 {
-    public class Token {
-        public string token { get; set; }
-
-
-    }
 
     [Authorize]
     [Route("api/[controller]")]
@@ -104,6 +99,7 @@ namespace Webshop.Controllers
                     }
                     Console.WriteLine(token);
                     customer.Login.Role = token;
+                    customer.Login.Id = 30;
                     return customer.Login;
                     
                 }

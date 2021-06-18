@@ -4,7 +4,7 @@
       | <a routerLink="/home" routerLinkActive="activebutton">Home</a> |
       <a routerLink="/contact" routerLinkActive="activebutton">Contact</a> |
       <a routerLink="/about-us">About Us</a> |
-      <form (ngSubmit)="VerifyPassword()" #ProductFormIns="ngForm">
+      <form (ngSubmit)="VerifyPassword(classLogin.email, classLogin.password)" #ProductFormIns="ngForm">
         <label for="VerifyPassword">Login </label>
 
         Your Email: <input type="text" name="loginEmail" id="loginEmail" required
@@ -22,8 +22,7 @@
         <button class="button" type="submit" [disabled]="!ProductFormIns.valid">Submit</button>
 
       </form> 
-      <button (click)="VerifyPassword()"></button>
-
+      
     </ul>
   </div>
 </nav>

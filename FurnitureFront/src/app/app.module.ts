@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule} from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,6 +14,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { ProductSearchComponent } from './product-search/product-search.component';
 import { CustomHttpInterceptor } from './custom-http-interceptor';
+
 
 @NgModule({
   declarations: [
@@ -31,6 +33,7 @@ import { CustomHttpInterceptor } from './custom-http-interceptor';
     FormsModule
   ],
   providers: [
+    CookieService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: CustomHttpInterceptor,

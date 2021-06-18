@@ -3,11 +3,12 @@ import { ClassLogin, Login } from '../models/login';
 import { LoginService } from '../services/login.service'
 import { FormsModule } from '@angular/forms';
 import { Location } from '@angular/common';
-import { Observable, observable } from 'rxjs';
-import { debounce, debounceTime } from 'rxjs/operators';
+import { Observable, interval } from 'rxjs';
+
+import { debounce, debounceTime, map, take, filter } from 'rxjs/operators';
 import { ProductService } from '../services/product.service';
 import { Product } from '../models/product';
-
+import { BearertokenService } from '../services/bearertoken.service';
 
 @Component({
   selector: 'app-navbar',
@@ -20,46 +21,54 @@ export class NavbarComponent implements OnInit {
   loginEdit: boolean;
   bearerToken: string;
   product: Product;
-  observable$;
 
   constructor(
     private loginService: LoginService,
-    private productService: ProductService
+    private productService: ProductService,
+    private bearerTokenService: BearertokenService
   ) { }
 
   ngOnInit(): void {
-    this.observable$ = Observable.create((dwa) => {
-      dwa.next(1);
-    })
+    const number$ = interval(500);
+
+
   }
 
-  private delay(ms: number)
-  {
+  private delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  // DET KAN FUNGERE MEN BLIVER IKKE SIKKERT HVIS MAN BRUGER ET DELAY 
-  async VerifyPassword() {
-    
-    this.loginService.ToLogin('jegerenemail@trues12.dk', 'jegeretsikkertpassword1')
+  VerifyPassword(email: string, password: string) {
+
+    this.loginService.ToLogin(email, password)
+      //***NOTAT***  EXEMPLE PÅ HVORDAN MAN MODIFICERE ET OBJEKT INDE I EN OBSERVABLE
+      .pipe(
+        map(Login => {
+          this.login = Login
+          this.login.id = this.login.id * 10
+          return this.login
+
+        })
+      )
       .subscribe(Login => {
-        this.login = Login,
-        this.GetData})
-    
-      await this.delay(500);
-      this.GetData();
+        this.bearerToken = Login.role,
+          this.SetBearerToken(this.bearerToken)
+     
+      })
   }
 
-  GetData(){
-    console.log(this.login);
+  SetBearerToken(bearerToken: string) {
+    this.bearerTokenService.SetBearertoken(bearerToken);
+    this.bearerTokenService.GetBearertoken()
   }
+
 
   GetProduct() {
     this.productService.getProduct(2)
       .subscribe(product => this.product = product)
 
     console.log(this.product);
-    
+
   }
 }
 
