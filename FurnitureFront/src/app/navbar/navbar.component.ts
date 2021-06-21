@@ -34,6 +34,7 @@ export class NavbarComponent implements OnInit {
 
   }
 
+  //TODO slet denne her
   private delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }

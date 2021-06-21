@@ -32,8 +32,8 @@ namespace Webshop.JWT
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.NameIdentifier, (customer.Id).ToString()),
-                    new Claim(ClaimTypes.Name, customer.Login.Email),
+                    new Claim(ClaimTypes.Name, customer.Id.ToString()),
+                    new Claim(ClaimTypes.Email, customer.Login.Email),
                     new Claim(ClaimTypes.Role, customer.Login.Role)
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),

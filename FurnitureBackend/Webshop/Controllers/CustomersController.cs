@@ -21,8 +21,6 @@ namespace Webshop.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-
-        //Authorize 
         private readonly IJWTAuthenticatorManager jwtAuthenticatorManager;
         private readonly WebshopContext _context;
 
@@ -33,42 +31,6 @@ namespace Webshop.Controllers
 
         }
         
-        
-        /*FOR
-      [AllowAnonymous]
-      [HttpPost]
-      [Route("VerifyPassword")]
-      public async Task<ActionResult<Login>> VerifyPassword(Login login)
-      {
-          var customer = await _context.Customers.Include(s => s.Login).FirstOrDefaultAsync(s => s.Login.Email == login.Email);
-          if (customer == null)
-          {
-              //TODO ERROR HANDLING
-              return Unauthorized();
-          }            
-          else
-          {
-              bool i = BC.Verify(login.Password, customer.Login.Password);
-              Console.WriteLine(i);
-              if (!i)
-              {
-                  return Unauthorized();
-              }
-              else
-              {
-                  //TODO Create user token with JWT
-                  var token = jwtAuthenticatorManager.Authenticate(customer);
-                  if (token == null)
-                  {
-                      return Unauthorized();
-                  }
-                  Console.WriteLine(token);
-                  return Ok(token);
-
-              }
-          }
-      }
-        */
 
         [AllowAnonymous]
         [HttpGet]
@@ -78,7 +40,7 @@ namespace Webshop.Controllers
             var customer = await _context.Customers.Include(s => s.Login).FirstOrDefaultAsync(s => s.Login.Email == email);
             if (customer == null)
             {
-                //TODO ERROR HANDLING
+                // TODO: ERROR HANDLING
                 return Unauthorized();
             }            
             else
@@ -91,7 +53,6 @@ namespace Webshop.Controllers
                 }
                 else
                 {
-                    //TODO Create user token with JWT
                     var token = jwtAuthenticatorManager.Authenticate(customer);
                     if (token == null)
                     {
@@ -99,32 +60,13 @@ namespace Webshop.Controllers
                     }
                     Console.WriteLine(token);
                     customer.Login.Role = token;
-                    customer.Login.Id = 30;
+                    customer.Login.Id = customer.Login.Id;
                     return customer.Login;
                     
                 }
             }
         }
         
-       
-
-
-        [HttpGet("GetRole/{id}")]
-        //[Route("GetRole")]
-        public async Task<ActionResult<Customer>> GetRole(int id)
-        {
-            //TODO Dunno om det laves sådan men den burde kun returne et Rollen personen har
-            var customer = await _context.Customers
-                                    .Include(s => s.Login)
-                                    .FirstOrDefaultAsync(s => s.Id == id);
-            
-            if (customer == null)
-            {
-                return NotFound();
-            }
-
-            return customer;
-        }
 
         // POST: api/Customers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -157,7 +99,7 @@ namespace Webshop.Controllers
 
 
         #region Scaffolded code
-
+        [Authorize(Roles = "2")]
         // GET: api/Customers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
@@ -165,10 +107,16 @@ namespace Webshop.Controllers
             return await _context.Customers.Include(s => s.Login).ToListAsync();
         }
 
+
         // GET: api/Customers/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Customer>> GetCustomer(int id)
         {
+            var currentUserId = int.Parse(User.Identity.Name);
+            //man får udleveret sin egen information medmindre du er en admin rolle
+            if (id != currentUserId && !User.IsInRole("2"))
+                return Forbid();
+
             var customer = await _context.Customers.Include(s => s.Login).FirstOrDefaultAsync(s => s.Id == id);
 
             if (customer == null)
