@@ -17,20 +17,9 @@ export class LoginService {
 
   httpOptionsJson = {
     headers: new HttpHeaders({ 
-      'Content-Type': 'application/json',
-      //'Authorization': 'Bearer' + this.cookie.get("bearertoken")
+      'Content-Type': 'application/json'
     }),
-
   }
-
-
-  /*
-    ToLogin(login: Login): Observable<string>{
-      const url = `${this.loginUrl}VerifyPassword/`;
-      return this.http.post<string>(url, login, this.httpOptionsJson)
-        .pipe(tap(_ => console.log('Verifying password')))
-    }
-  */
 
   //Man kan bruge console.log til at skrive værdien i en observable 
   ToLogin(email: string, password: string): Observable<Login> {

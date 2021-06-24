@@ -9,6 +9,7 @@ import { debounce, debounceTime, map, take, filter } from 'rxjs/operators';
 import { ProductService } from '../services/product.service';
 import { Product } from '../models/product';
 import { BearertokenService } from '../services/bearertoken.service';
+import { BearerTokenInfo } from '../models/bearertokeninfo';
 
 @Component({
   selector: 'app-navbar',
@@ -21,6 +22,7 @@ export class NavbarComponent implements OnInit {
   loginEdit: boolean;
   bearerToken: string;
   product: Product;
+  loginInfo: BearerTokenInfo;
 
   constructor(
     private loginService: LoginService,
@@ -29,28 +31,24 @@ export class NavbarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const number$ = interval(500);
+    //this.bearerToken = this.bearerTokenService.GetBearertoken()
+
+    this.loginInfo = this.bearerTokenService.DecodeBearerToken();
+    if(this.loginInfo == null){
+      console.log("NOT LOGGED IN");
+      
+    }
+    else{
+      console.log("LOGGED IN");
+    }
 
 
-  }
-
-  //TODO slet denne her
-  private delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   VerifyPassword(email: string, password: string) {
-
+    // genbruger rolle i denne her funktion til at få den bearertoken string der bliver givet til siden.
     this.loginService.ToLogin(email, password)
-      //***NOTAT***  EXEMPLE PÅ HVORDAN MAN MODIFICERE ET OBJEKT INDE I EN OBSERVABLE
-      .pipe(
-        map(Login => {
-          this.login = Login
-          this.login.id = this.login.id * 10
-          return this.login
-
-        })
-      )
+      .pipe()
       .subscribe(Login => {
         this.bearerToken = Login.role,
           this.SetBearerToken(this.bearerToken)
@@ -60,7 +58,8 @@ export class NavbarComponent implements OnInit {
 
   SetBearerToken(bearerToken: string) {
     this.bearerTokenService.SetBearertoken(bearerToken);
-    this.bearerTokenService.GetBearertoken()
+     
+    //this.bearerTokenService.GetBearertoken()
   }
 
 
