@@ -10,6 +10,8 @@ export class CustomHttpInterceptor implements HttpInterceptor{
         
     }
     
+    //Den intercepter alle httprequests og skriver Auth token ud
+    //TODO den nok ikke skrive Authtoken for hver request
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>{        
         const authToken = this.bearertokenService.GetBearertoken();     
         

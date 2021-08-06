@@ -31,19 +31,11 @@ export class NavbarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    //this.bearerToken = this.bearerTokenService.GetBearertoken()
-
-    this.loginInfo = this.bearerTokenService.DecodeBearerToken();
-    if(this.loginInfo == null){
-      console.log("NOT LOGGED IN");
-      
-    }
-    else{
-      console.log("LOGGED IN");
-    }
-
-
+    this.loginInfo = this.bearerTokenService.CheckLoginInfo();
+    
   }
+
+  
 
   VerifyPassword(email: string, password: string) {
     // genbruger rolle i denne her funktion til at få den bearertoken string der bliver givet til siden.
@@ -52,16 +44,18 @@ export class NavbarComponent implements OnInit {
       .subscribe(Login => {
         this.bearerToken = Login.role,
           this.SetBearerToken(this.bearerToken)
-     
+          //checklogininfo bruger vi for at holde den dynamisk opdateret med om der noget i den variable og vores html ændres ud fra det 
+          this.loginInfo = this.bearerTokenService.CheckLoginInfo();
+    
       })
+      
   }
 
   SetBearerToken(bearerToken: string) {
     this.bearerTokenService.SetBearertoken(bearerToken);
-     
-    //this.bearerTokenService.GetBearertoken()
   }
 
+ 
 
   GetProduct() {
     this.productService.getProduct(2)

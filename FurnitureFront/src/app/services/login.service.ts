@@ -12,8 +12,11 @@ import { CookieService } from 'ngx-cookie-service';
 export class LoginService {
   private loginUrl = 'api/Customers/';
 
-  constructor(private http: HttpClient,
-    cookie: CookieService) { }
+  constructor(
+    private http: HttpClient,
+    cookie: CookieService,
+    private bearerTokenService: BearertokenService
+    ) { }
 
   httpOptionsJson = {
     headers: new HttpHeaders({ 
@@ -22,11 +25,13 @@ export class LoginService {
   }
 
   //Man kan bruge console.log til at skrive værdien i en observable 
+  //Tap for at kunne se hvornår og hvor hurtigt vi får respons
   ToLogin(email: string, password: string): Observable<Login> {
     const url = `${this.loginUrl}VerifyPassword/?email=${email}&password=${password}`;
     return this.http.get<Login>(url, this.httpOptionsJson)
       .pipe(
         tap(res => console.log('HTTP response:', res)),
+    
       )
 
   }

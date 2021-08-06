@@ -15,7 +15,7 @@ using BC = BCrypt.Net.BCrypt;
 
 namespace Webshop.Controllers
 {
-
+    // Bruger authorize tagget for at indikere at med mindre andet er tagget at du skal have en verificeret hash
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
@@ -59,6 +59,9 @@ namespace Webshop.Controllers
                         return Unauthorized();
                     }
                     Console.WriteLine(token);
+                    //sender ikke password så derfor sætter vi den til null
+                    customer.Login.Password = null;
+                    //genbruger role til at transportere token til front end
                     customer.Login.Role = token;
                     customer.Login.Id = customer.Login.Id;
                     return customer.Login;

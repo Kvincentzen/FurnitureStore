@@ -27,15 +27,18 @@ namespace Webshop.JWT
         public string Authenticate(Customer customer)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
+            //Token key bliver hentet fra en string som er vores nøgle til at verificere hashen
             var key = Encoding.ASCII.GetBytes(tokenKey);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
+                    //Claims er de dele der med der blev sendt med i hashen
                     new Claim(ClaimTypes.Name, customer.Id.ToString()),
                     new Claim(ClaimTypes.Email, customer.Login.Email),
                     new Claim(ClaimTypes.Role, customer.Login.Role)
                 }),
+                //hvor lang tid den token er valid
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
