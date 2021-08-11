@@ -1,6 +1,5 @@
 <div class="home products">
     <a *ngFor="let product of products" routerLink="/product/{{product.id}}">
-        <span class="badge">{{product.id}}</span>
-        {{product.name}}
+        <span class="badge">{{product.id}} {{product.name}} - {{product.price}} kr.</span>
     </a>
 </div>

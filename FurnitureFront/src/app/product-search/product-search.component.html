@@ -4,9 +4,9 @@
   
     <ul class="search-result">
       <li *ngFor="let product of products$ | async" >
-        <a  routerLink="/product/{{product.id}}">
-          {{product.name}}
-        </a>
+        <td>
+            <a  routerLink="/product/{{product.id}}">{{product.id}} {{product.name}} - {{product.price}} kr.</a>
+        </td>
       </li>
     </ul>
   </div>
