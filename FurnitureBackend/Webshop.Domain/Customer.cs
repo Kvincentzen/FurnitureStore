@@ -11,10 +11,14 @@ namespace Webshop.Domain
         public int TelephoneNumber { get; set; }
         public string Address { get; set; }
         public int LoginId { get; set; }
-        public Logins Login { get; set; }
+        public Login Login { get; set; }
         public Customer()
         {
-            Login = new Logins();
+            string email = null, role = null;
+            Login = new Login(LoginId, email, role);
+
         }
+
+
     }
 }

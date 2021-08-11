@@ -1,0 +1,33 @@
+import { HttpEvent, HttpHandler, HttpRequest, HttpInterceptor, HttpResponse } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+import { Observable } from 'rxjs'
+import { tap, filter } from 'rxjs/operators';
+import { BearertokenService } from './services/bearertoken.service';
+
+@Injectable()
+export class CustomHttpInterceptor implements HttpInterceptor{    
+    constructor(private bearertokenService: BearertokenService){
+        
+    }
+    
+    //Den intercepter alle httprequests og skriver Auth token ud
+    //TODO den nok ikke skrive Authtoken for hver request
+    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>{        
+        const authToken = this.bearertokenService.GetBearertoken();     
+        
+        request = request.clone({
+            setHeaders: {     
+                Authorization: `Bearer ${authToken}`, 
+            }
+        })         
+        return next.handle(request)
+        
+
+        /*.pipe
+        (filter(event => event instanceof HttpResponse),
+        (tap((event: HttpResponse<any>) => {
+            request.urlWithParams   
+        })
+        ));*/
+    }
+}

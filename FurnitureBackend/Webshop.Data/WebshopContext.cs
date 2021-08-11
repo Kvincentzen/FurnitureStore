@@ -7,7 +7,7 @@ namespace Webshop.Data
 {
     public class WebshopContext : DbContext
     {
-        public DbSet<Logins> Logins { get; set; }
+        public DbSet<Login> Logins { get; set; }
         public DbSet<Picture> Pictures { get; set; }
         public DbSet<Edition> Editions { get; set; }
         public DbSet<ProductEdition> ProductEditions { get; set; }
@@ -32,7 +32,7 @@ namespace Webshop.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //Vi skal ikke sende Password til brugeren, denne sætning gør at den blive ignoreret.
-            modelBuilder.Entity<Logins>().Ignore(b => b.Password);
+            //modelBuilder.Entity<Login>().Ignore(b => b.Password);
         }
     }
 }
